@@ -15,7 +15,6 @@ app.use(express.urlencoded({ extended: false })); // HELPS TO PROCESS FORM DATA 
 app.use(cookieParser()); // READS COOKIES FROM INCOMING REQUESTS SO YOUR APP CAN STORE USER DATA
 
 // .use() -> MIDDLEWARE
-
 app.use("/api/v1/auth", authRouter); // -> api/v1/auth/sign-up
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
