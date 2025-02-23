@@ -7,12 +7,14 @@ import subscriptionRouter from "./routes/subscription.routes.js";
 import connectToDatabase from "./database/mongodb.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import cookieParser from "cookie-parser";
+import arcjetMiddleware from "./middlewares/arcjet.middleware.js";
 
 const app = express(); // INITIALIZE EXPRESS
 
 app.use(express.json()); // HANDLE JSON DATA SENT IN REQUEST
 app.use(express.urlencoded({ extended: false })); // HELPS TO PROCESS FORM DATA SEND VIA HTML FORMS IN SIMPLE FORMAT
 app.use(cookieParser()); // READS COOKIES FROM INCOMING REQUESTS SO YOUR APP CAN STORE USER DATA
+app.use(arcjetMiddleware); // MIDDLEWARE TO PROTECT API
 
 // .use() -> MIDDLEWARE
 app.use("/api/v1/auth", authRouter); // -> api/v1/auth/sign-up
