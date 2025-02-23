@@ -34,17 +34,22 @@ export const authorize = async (req, res, next) => {
     }
 
     req.user = user; // ATTACH THE USER TO THE REQ OBJECT
-    // console.log("req.user:", req.user);
 
-    // IF THE USER IS AN ADMIN ALLOW ACCESS TO ALL ROUTES
-    if (user.role === "admin") {
-      return next();
+    // Restrict GET /users to only admin users
+    if (req.path === "/" && req.method === "GET" && user.role !== "admin") {
+      console.log("NON-ADMIN ATTEMPTING TO FETCH ALL USERS");
+      return res.status(403).json({ message: "Forbidden: Admins only" });
     }
 
-    // FOR NON-ADMIN USERS CHECK IF THE USER ID MATCHES
-    if (req.params.id && req.params.id !== decoded.userId) {
-      // IF USER ID DOESN'T MATCH THE USER ID IN THE TOKEN
-      return res.status(401).json({ message: "Unauthorized" });
+    // Allow users to fetch only their own data
+    if (
+      req.params.id &&
+      req.params.id !== decoded.userId &&
+      user.role !== "admin"
+    ) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden: Cannot access other users' data" });
     }
 
     next(); // ALLOW ACCESS TO THE ROUTE
