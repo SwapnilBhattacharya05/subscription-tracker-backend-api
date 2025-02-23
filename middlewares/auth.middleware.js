@@ -28,6 +28,9 @@ export const authorize = async (req, res, next) => {
 
     if (!user) return res.status(401).json({ message: "Unauthorized" }); // IF USER DOESN'T EXIST
 
+    if (req.params.id && req.params.id !== decoded.userId)
+      return res.status(401).json({ message: "Unauthorized" }); // IF USER ID DOESN'T MATCH THE USER ID IN THE TOKEN
+
     // IF IT DOES EXISTS
     req.user = user;
     next();
