@@ -17,8 +17,10 @@ export const authorize = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1]; // GET THE TOKEN FROM THE HEADERS
     }
 
-    // IF THERE IS NO TOKEN
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    if (!token) {
+      console.log("NO TOKEN PROVIDED");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
     // IF THERE IS A TOKEN VERIFY THE TOKEN
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -26,43 +28,28 @@ export const authorize = async (req, res, next) => {
     // CHECK IF USER STILL EXISTS
     const user = await User.findById(decoded.userId);
 
-    if (!user) return res.status(401).json({ message: "Unauthorized" }); // IF USER DOESN'T EXIST
-
-    if (req.params.id && req.params.id !== decoded.userId)
-      return res.status(401).json({ message: "Unauthorized" }); // IF USER ID DOESN'T MATCH THE USER ID IN THE TOKEN
-
-    // IF IT DOES EXISTS AND THE USER ID MATCHES
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: "Unauthorized", error: error.message });
-  }
-};
-
-export const adminAuthorize = async (req, res, next) => {
-  try {
-    let token;
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    }
-
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    const user = await User.findById(decoded.userId);
-
-    if (!user) return res.status(401).json({ message: "Unauthorized" });
-
-    if (user.role !== "admin") {
+    if (!user) {
+      console.log("USER NOT FOUND");
       return res.status(401).json({ message: "Unauthorized" });
     }
-    req.user = user;
-    next();
+
+    req.user = user; // ATTACH THE USER TO THE REQ OBJECT
+    // console.log("req.user:", req.user);
+
+    // IF THE USER IS AN ADMIN ALLOW ACCESS TO ALL ROUTES
+    if (user.role === "admin") {
+      return next();
+    }
+
+    // FOR NON-ADMIN USERS CHECK IF THE USER ID MATCHES
+    if (req.params.id && req.params.id !== decoded.userId) {
+      // IF USER ID DOESN'T MATCH THE USER ID IN THE TOKEN
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    next(); // ALLOW ACCESS TO THE ROUTE
   } catch (error) {
+    console.error("Error in authorize middleware:", error);
     res.status(401).json({ message: "Unauthorized", error: error.message });
   }
 };

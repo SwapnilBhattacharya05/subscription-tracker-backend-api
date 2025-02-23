@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { getUser, getUsers } from "../controllers/user.controller.js";
-import { adminAuthorize, authorize } from "../middlewares/auth.middleware.js";
+import { authorize } from "../middlewares/auth.middleware.js";
 
 const userRouter = Router();
 
 // GET /users -> GET ALL USERS
 // GET /users/:id -> GET SPECIFIC USER BY ID // 3456rtfcvguhiuyest
 
-userRouter.get("/", adminAuthorize, getUsers);
+userRouter.get("/", authorize, getUsers);
 
 userRouter.get("/:id", authorize, getUser); // GET SPECIFIC USER
 
