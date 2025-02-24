@@ -72,7 +72,7 @@ EMAIL_USER=
 EMAIL_PASSWORD=
 ```
 
-Replace the placeholder values with your actual Qstash credentials. You Can get these from [Upstash](https://upstash.com).
+Replace the placeholder values with your actual [Qstash](https://upstash.com) and [Arcjet](https://arcjet.com) credentials.
 
 **Start the App**
 
