@@ -1,6 +1,6 @@
 # 📝 Subscription Tracker API
 
-Built a production ready Subscription Management System API. It handles real users, and real business logic. Authenticating users via JWTs, connect mongoDB to store data, Use of QStash Workflow API to send email reminders based on renewal date. Security integration with Arcjet
+Production ready Subscription Management System API. It handles real users, and real business logic. Authenticating users via JWTs, connect mongoDB to store data, Use of QStash Workflow API to send email reminders based on renewal date. Security integration with Arcjet
 
 ## ✏️ Tech Stack
 
